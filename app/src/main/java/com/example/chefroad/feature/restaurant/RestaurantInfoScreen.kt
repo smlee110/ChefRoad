@@ -22,13 +22,12 @@ fun RestaurantInfoScreen(
     phoneNumber: String,
     address: String,
     openingHours: String,
-    menuItems: List<MenuItem>, // 메뉴 데이터
-    reviews: List<Review>, // 리뷰 데이터
+    menuItems: List<MenuItem>,
+    reviews: List<Review>,
     imageResId: Int?,
-    allergyIcons: List<Int>, // 알레르기 아이콘 리스트
-    waitTime: String // 예상 대기시간
+    allergyIcons: List<Int>,
+    waitTime: String
 ) {
-    // 현재 선택된 탭 상태 관리
     var selectedTab by remember { mutableStateOf(0) }
 
     Column(
@@ -36,13 +35,12 @@ fun RestaurantInfoScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(56.dp)) // TopBar처럼 보이는 빈 공간
+        Spacer(modifier = Modifier.height(56.dp))
 
-        // 식당 정보 카드
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp), // 높이를 늘려 알레르기 아이콘과 대기시간 표시 공간 확보
+                .height(200.dp),
             shape = RoundedCornerShape(8.dp),
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
@@ -50,24 +48,21 @@ fun RestaurantInfoScreen(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 왼쪽: 이미지와 추가 정보
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // 큰 이미지
                     Image(
                         painter = painterResource(id = imageResId ?: R.drawable.placeholder),
-                        contentDescription = "Restaurant Image",
+                        contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    // 알레르기 아이콘
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -75,7 +70,7 @@ fun RestaurantInfoScreen(
                         allergyIcons.forEach { iconResId ->
                             Image(
                                 painter = painterResource(id = iconResId),
-                                contentDescription = "Allergy Icon",
+                                contentDescription = null,
                                 modifier = Modifier
                                     .size(24.dp)
                                     .padding(4.dp)
@@ -83,7 +78,6 @@ fun RestaurantInfoScreen(
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    // 예상 대기시간
                     Text(
                         text = "예상 대기시간: $waitTime",
                         fontSize = 14.sp,
@@ -92,7 +86,6 @@ fun RestaurantInfoScreen(
                     )
                 }
 
-                // 오른쪽: 텍스트 정보
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -127,7 +120,6 @@ fun RestaurantInfoScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 탭 UI
         TabRow(
             selectedTabIndex = selectedTab,
             modifier = Modifier.fillMaxWidth()
@@ -144,10 +136,9 @@ fun RestaurantInfoScreen(
             )
         }
 
-        // 탭에 따른 콘텐츠 표시
         when (selectedTab) {
-            0 -> MenuTabContent(menuItems = menuItems) // 메뉴 탭
-            1 -> ReviewTabContent(reviews = reviews) // 리뷰 탭
+            0 -> MenuTabContent(menuItems = menuItems)
+            1 -> ReviewTabContent(reviews = reviews)
         }
     }
 }
@@ -164,15 +155,13 @@ fun MenuTabContent(menuItems: List<MenuItem>) {
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                // 메뉴 이미지
                 Image(
                     painter = painterResource(id = menuItem.imageResId ?: R.drawable.placeholder),
-                    contentDescription = "Menu Image",
+                    contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)
                         .padding(end = 8.dp)
                 )
-                // 메뉴 이름과 가격
                 Column {
                     Text(
                         text = menuItem.name,
@@ -180,7 +169,7 @@ fun MenuTabContent(menuItems: List<MenuItem>) {
                         fontSize = 16.sp
                     )
                     Text(
-                        text = "${menuItem.price}원", // 가격 표시
+                        text = "${menuItem.price}원",
                         fontSize = 14.sp,
                         color = androidx.compose.ui.graphics.Color.Gray
                     )
@@ -203,15 +192,13 @@ fun ReviewTabContent(reviews: List<Review>) {
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                // 리뷰 이미지
                 Image(
                     painter = painterResource(id = review.userImageResId ?: R.drawable.placeholder),
-                    contentDescription = "User Image",
+                    contentDescription = null,
                     modifier = Modifier
                         .size(48.dp)
                         .padding(end = 8.dp)
                 )
-                // 리뷰 내용
                 Column {
                     Text(
                         text = review.userName,
@@ -230,6 +217,5 @@ fun ReviewTabContent(reviews: List<Review>) {
     }
 }
 
-// 메뉴와 리뷰 데이터를 위한 데이터 클래스
 data class MenuItem(val name: String, val price: Int, val imageResId: Int?)
 data class Review(val userName: String, val content: String, val userImageResId: Int?)
