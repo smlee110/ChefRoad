@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
-fun HomeScreen(onShowClick: (String) -> Unit) {
+fun TvShow(onShowClick: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()

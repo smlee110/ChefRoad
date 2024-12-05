@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
             RestaurantInfoScreen(
                 restaurantName = "맛있는 식당",
                 phoneNumber = "02-1234-5678",
-                address = "서울특별시 강남구 강남대로 123",
+                address = "서울특별시 xx구 xx로 123",
                 openingHours = "11:00 - 02:00",
                 menuItems = listOf(
                     MenuItem("김치찌개", 7000, null),
