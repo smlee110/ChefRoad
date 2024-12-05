@@ -1,6 +1,8 @@
 package com.example.chefroad.feature.restaurant
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,20 +24,22 @@ fun RestaurantInfoScreen(
     phoneNumber: String,
     address: String,
     openingHours: String,
+    weeklyHours: List<String>, // 요일별 영업시간 리스트
     menuItems: List<MenuItem>,
     reviews: List<Review>,
     imageResId: Int?,
     allergyIcons: List<Int>,
     waitTime: String
 ) {
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableStateOf(0) } // 탭 상태
+    var expanded by remember { mutableStateOf(false) } // 영업시간 확장 상태
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(56.dp))
+        Spacer(modifier = Modifier.height(56.dp)) // TopBar처럼 보이는 빈 공간
 
         Card(
             modifier = Modifier
@@ -56,7 +60,7 @@ fun RestaurantInfoScreen(
                 ) {
                     Image(
                         painter = painterResource(id = imageResId ?: R.drawable.placeholder),
-                        contentDescription = null,
+                        contentDescription = "Restaurant Image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .weight(1f)
@@ -70,7 +74,7 @@ fun RestaurantInfoScreen(
                         allergyIcons.forEach { iconResId ->
                             Image(
                                 painter = painterResource(id = iconResId),
-                                contentDescription = null,
+                                contentDescription = "Allergy Icon",
                                 modifier = Modifier
                                     .size(24.dp)
                                     .padding(4.dp)
@@ -109,17 +113,54 @@ fun RestaurantInfoScreen(
                         fontSize = 14.sp,
                         color = androidx.compose.ui.graphics.Color.Gray
                     )
-                    Text(
-                        text = "영업시간: $openingHours",
-                        fontSize = 14.sp,
-                        color = androidx.compose.ui.graphics.Color.Gray
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "영업시간: $openingHours",
+                            fontSize = 14.sp,
+                            color = androidx.compose.ui.graphics.Color.Gray
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(
+                            painter = painterResource(
+                                id = if (expanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(16.dp)
+                                .clickable { expanded = !expanded }
+                        )
+                    }
+                }
+            }
+        }
+
+        // 애니메이션으로 요일별 영업시간 표시
+        AnimatedVisibility(visible = expanded) {
+            Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                weeklyHours.forEachIndexed { index, hours ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = dayOfWeek(index),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                        Text(
+                            text = hours,
+                            fontSize = 14.sp,
+                            color = androidx.compose.ui.graphics.Color.Gray
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // 탭 UI
         TabRow(
             selectedTabIndex = selectedTab,
             modifier = Modifier.fillMaxWidth()
@@ -136,6 +177,7 @@ fun RestaurantInfoScreen(
             )
         }
 
+        // 탭에 따른 콘텐츠 표시
         when (selectedTab) {
             0 -> MenuTabContent(menuItems = menuItems)
             1 -> ReviewTabContent(reviews = reviews)
@@ -143,6 +185,12 @@ fun RestaurantInfoScreen(
     }
 }
 
+// 요일 텍스트 변환 함수
+fun dayOfWeek(index: Int): String {
+    return listOf("월", "화", "수", "목", "금", "토", "일")[index]
+}
+
+// 메뉴 탭 콘텐츠
 @Composable
 fun MenuTabContent(menuItems: List<MenuItem>) {
     LazyColumn(
@@ -157,7 +205,7 @@ fun MenuTabContent(menuItems: List<MenuItem>) {
             ) {
                 Image(
                     painter = painterResource(id = menuItem.imageResId ?: R.drawable.placeholder),
-                    contentDescription = null,
+                    contentDescription = "Menu Image",
                     modifier = Modifier
                         .size(64.dp)
                         .padding(end = 8.dp)
@@ -180,6 +228,7 @@ fun MenuTabContent(menuItems: List<MenuItem>) {
     }
 }
 
+// 리뷰 탭 콘텐츠
 @Composable
 fun ReviewTabContent(reviews: List<Review>) {
     LazyColumn(
@@ -194,7 +243,7 @@ fun ReviewTabContent(reviews: List<Review>) {
             ) {
                 Image(
                     painter = painterResource(id = review.userImageResId ?: R.drawable.placeholder),
-                    contentDescription = null,
+                    contentDescription = "User Image",
                     modifier = Modifier
                         .size(48.dp)
                         .padding(end = 8.dp)
@@ -217,5 +266,6 @@ fun ReviewTabContent(reviews: List<Review>) {
     }
 }
 
+// 데이터 클래스
 data class MenuItem(val name: String, val price: Int, val imageResId: Int?)
 data class Review(val userName: String, val content: String, val userImageResId: Int?)

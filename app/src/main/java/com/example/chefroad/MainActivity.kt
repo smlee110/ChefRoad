@@ -13,7 +13,16 @@ class MainActivity : ComponentActivity() {
                 restaurantName = "맛있는 식당",
                 phoneNumber = "02-1234-5678",
                 address = "서울특별시 xx구 xx로 123",
-                openingHours = "11:00 - 02:00",
+                openingHours = "11:00 - 22:00",
+                weeklyHours = listOf(
+                    "11:00 - 22:00", // 월
+                    "11:00 - 22:00", // 화
+                    "11:00 - 22:00", // 수
+                    "11:00 - 22:00", // 목
+                    "11:00 - 22:00", // 금
+                    "11:00 - 23:00", // 토
+                    "11:00 - 23:00"  // 일
+                ),
                 menuItems = listOf(
                     MenuItem("김치찌개", 7000, null),
                     MenuItem("된장찌개", 8000, null),
@@ -28,11 +37,15 @@ class MainActivity : ComponentActivity() {
                 ),
                 reviews = listOf(
                     Review("A", "맛있어요!", null),
-                    Review("B", "서비스가 친절해요!", null),
+                    Review("B", "서비스가 좋아요!", null),
                     Review("C", "분위기가 좋아요!", null)
                 ),
-                imageResId = null,
-                allergyIcons = listOf(R.drawable.placeholder, R.drawable.placeholder, R.drawable.placeholder), // 임시 아이콘
+                imageResId = null, // 기본 이미지를 사용
+                allergyIcons = listOf(
+                    R.drawable.placeholder,
+                    R.drawable.placeholder,
+                    R.drawable.placeholder
+                ),
                 waitTime = "20분"
             )
         }
